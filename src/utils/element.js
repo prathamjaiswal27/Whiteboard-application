@@ -5,7 +5,7 @@ import rough from "roughjs/bin/rough";
 import { getArrowHeadsCoordinates, isPointCloseToLine } from "./math";
 
 const gen = rough.generator();
-
+ 
 export const createElement = (
   id,
   x1,

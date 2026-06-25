@@ -6,6 +6,7 @@ import toolboxContext from "../../store/toolbox-context";
 
 import classes from "./index.module.css";
 
+
 function Board() {
   const canvasRef = useRef();
   const textAreaRef = useRef();
