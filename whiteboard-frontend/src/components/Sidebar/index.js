@@ -9,7 +9,7 @@ import { useParams } from 'react-router-dom';
 const Sidebar = () => {
   const [canvases, setCanvases] = useState([]);
   const token = localStorage.getItem('whiteboard_user_token');
-  const { canvasId, setCanvasId,setElements,setHistory, isUserLoggedIn, setUserLoginStatus} = useContext(boardContext);
+  const { canvasId, setCanvasId, isUserLoggedIn, setUserLoginStatus } = useContext(boardContext);
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
@@ -18,12 +18,34 @@ const Sidebar = () => {
   const { id } = useParams(); 
 
   useEffect(() => {
-    if (isUserLoggedIn) {
-      fetchCanvases();
-    }
-  }, [isUserLoggedIn]);
+    if (!isUserLoggedIn) return;
 
-  useEffect(() => {}, []);
+    const loadCanvases = async () => {
+      try {
+        const response = await axios.get('https://api-whiteboard-az.onrender.com/api/canvas/list', {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        setCanvases(response.data);
+
+        if (response.data.length === 0) {
+          const createResponse = await axios.post(
+            'https://api-whiteboard-az.onrender.com/api/canvas/create',
+            {},
+            { headers: { Authorization: `Bearer ${token}` } }
+          );
+          setCanvasId(createResponse.data.canvasId);
+          navigate(`/${createResponse.data.canvasId}`);
+        } else if (!canvasId && !id) {
+          setCanvasId(response.data[0]._id);
+          navigate(`/${response.data[0]._id}`);
+        }
+      } catch (error) {
+        console.error('Error fetching canvases:', error);
+      }
+    };
+
+    loadCanvases();
+  }, [canvasId, id, isUserLoggedIn, navigate, setCanvasId, token]);
 
   const fetchCanvases = async () => {
     try {

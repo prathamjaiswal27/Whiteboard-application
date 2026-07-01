@@ -1,13 +1,10 @@
-import React, { useCallback, useReducer, useEffect } from "react";
+import React, { useCallback, useReducer } from "react";
 import boardContext from "./board-context";
 import { BOARD_ACTIONS, TOOL_ACTION_TYPES, TOOL_ITEMS } from "../constants";
 import {
   createElement,
   isPointNearElement,
 } from "../utils/element";
-import { updateCanvas, fetchInitialCanvasElements } from "../utils/api";
-
-const canvasId = "67a66a7c2475972d34655e4d";
 
 const boardReducer = (state, action) => {
   switch (action.type) {
@@ -317,32 +314,32 @@ const BoardProvider = ({ children }) => {
     });
   }, []);
 
-  const setCanvasId = (canvasId) => {
+  const setCanvasId = useCallback((canvasId) => {
     dispatchBoardAction({
       type: BOARD_ACTIONS.SET_CANVAS_ID,
       payload: {
         canvasId,
       },
     });
-  };
+  }, []);
 
-  const setElements = (elements) => {
+  const setElements = useCallback((elements) => {
     dispatchBoardAction({
       type: BOARD_ACTIONS.SET_CANVAS_ELEMENTS,
       payload: {
         elements,
       },
     });
-  };
+  }, []);
     // console.log("hello canvas")
-  const setHistory = (elements) => {
+  const setHistory = useCallback((elements) => {
     dispatchBoardAction({
       type: BOARD_ACTIONS.SET_HISTORY,
       payload: {
         elements,
       },
     });
-  };  
+  }, []);
 
   const setUserLoginStatus = (isUserLoggedIn) => {
     dispatchBoardAction({
